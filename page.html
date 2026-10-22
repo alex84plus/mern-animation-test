@@ -1,51 +1,69 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scael:1.0">
-<title>Forest Crawler</title>
-<link rel="stylesheet" href="./style.css"
-<script src="./gameplay.js" type="text/javascript"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Forest Crawler</title>
+
+    <link rel="stylesheet" href="./style.css">
+    <script src="./gameplay.js" defer></script>
 </head>
+
 <body>
     <div class="gameContainer">
+
+        <!-- Game display -->
+        <canvas id="gameCanvas"
+                width="800"
+                height="400">
+        </canvas>
+
         <div class="gui">
             <div class="playerData">
                 <div class="healthPlayer">
-                    <label="healthPlayer">Knight HP</label>
-                    <progress id="healthPlayer" value="100" max="100" min="0">
-
+                    <label for="healthPlayer">Knight HP</label>
+                    <progress id="healthPlayer"
+                              value="100"
+                              max="100">
                     </progress>
                 </div>
+
                 <div class="actions">
                     <div id="attack">
-                        <button class="attacking" id="attackButton" type="button">
+                        <button id="attackButton" type="button">
                             ATK
                         </button>
-                        <button class="hidden" id="attackClickButton" type="button"></button>
+
+                        <button id="attackClickButton"
+                                class="hidden"
+                                type="button">
                             CLICK!!!
                         </button>
                     </div>
+
                     <div id="block">
-                        <button class="blocking" id="blockButton" type="button">
+                        <button id="blockButton" type="button">
                             BLK
                         </button>
                     </div>
+
                     <div id="heal">
-                        <button class="healing" id="healButton" type="button"></button>
+                        <button id="healButton" type="button">
                             HEAL
                         </button>
                     </div>
                 </div>
-                
             </div>
-            <div class="enemyData">
-                <div class="healthEnemy">
-                    <label="healthEnemy">Ghoul HP</label>
-                    <progress id="healthEnemy" value="100" max="100" min="0">
 
-                    </progress>
-                </div>
+            <div class="enemyData">
+                <label for="healthEnemy">Ghoul HP</label>
+                <progress id="healthEnemy"
+                          value="100"
+                          max="100">
+                </progress>
             </div>
         </div>
     </div>

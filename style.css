@@ -1,6 +1,43 @@
+body {
+    margin: 0;
+    background-color: #141414;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+#gameCanvas {
+    background-color: #252525;
+    border: 2px solid #555;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.gui {
+    width: min(800px, 100%);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
 .hidden {
     display: none;
-}
-.attackButton {
-    background: #000000;
 }
