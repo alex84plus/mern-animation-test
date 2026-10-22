@@ -47,7 +47,7 @@ attackClickButton.addEventListener('click', () => {
 // Enemy functions
 
 // Selection screen
-function 
+function l
 
 // Gameplay loop
 // Moves the player to the next stage
