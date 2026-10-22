@@ -45,14 +45,19 @@ class Sprite {
             this.elapsedTime -= frameDuration;
             this.frame++;
             if(this.frame >= animation.frames){
-                this.frame = 0;
+                if(animation.loop === false){
+                    this.setAnimation("idle");
+                    break;
+                } else {
+                    this.frame = 0;
+                }
             }
         }
     }
 
     draw (ctx, x, y, scale = 1){
         if(!this.image.complete || !this.image.naturalWidth) return;
-        const animation = this.animation[this.currentAnimation];
+        const animation = this.animations[this.currentAnimation];
 
         const srcX = this.frame * this.frameWidth;
         const srcY = animation.row * this.frameHeight;
@@ -111,7 +116,7 @@ function dealDamage(totalClicks){
 // Hide/reveal the clickable button to accumulate damage
 function showClicks(){
     windowOpen = true;
-    attackButton.disabled = false;
+    attackButton.disabled = true;
     attackClickButton.classList.remove('hidden');
     setTimeout(() => {
         windowOpen = false;
