@@ -144,13 +144,14 @@ function startRound() {
     windowOpen = true;
     roundClicks = {
         attack: 0,
-        BLOCK: 0,
-        HEAL: 0
+        block: 0,
+        heal: 0
     };
-    roundEndTime = performance.now() + roundTime;
+    roundEndTime = performance.now() + windowTime;
     roundText.textContent = `Round ${roundNumber}`;
     roundTimerDisplay.textContent = "5.0";
     setActionsEnabled(true);
+    console.log(`Round ${roundNumber} started`);
     roundTimer = setTimeout(() => {
         endRound(); }, windowTime);
 }
@@ -179,13 +180,13 @@ function endRound(){
     windowOpen = false;
     setActionsEnabled(false);
 
-    const attackDamage = roundClicks.attack * ATTACK_MULT;
-    const blockedDamage = roundClicks.block * BLOCK_MULT;
-    const healingAmount = roundClicks.heal * HEAL_MULT;
+    const attackDamage = roundClicks.attack * DMGMULT;
+    const blockedDamage = roundClicks.block * BLKMULT;
+    const healingAmount = roundClicks.heal * HEALMULT;
 
-    const incomingDamage = enemyDamage - blockedDamage;
-    healthEnemy.value -= attackDamage;
-    healthPlayer.value -= incomingDamage + healingAmount;
+    const incomingDamage = Math.max(0, enemyDamage - blockedDamage);
+    healthEnemy.value = Math.max(0, Number(healthEnemy.value) - attackDamage);
+    healthPlayer.value = Math.min(Number(healthPlayer.max), Math.max(0, Number(healthPlayer.value) - incomingDamage + healingAmount));
 
     console.log("Round results:", {
         round: roundNumber,
@@ -201,7 +202,7 @@ function endRound(){
      if (roundClicks.attack > 0) {
         spritePlayer.setAnimation("attack");
     }
-    if(healthEnemy.vale <= 0 || healthPlayer.value <= 0){
+    if(healthEnemy.value <= 0 || healthPlayer.value <= 0){
         combatOver = true;
         console.log(healthEnemy.value <= 0 ? "Enemy defeated!" : "Player defeated!");
         return;
@@ -215,7 +216,7 @@ function endRound(){
 }
 
 function updateRoundTimer() {
-    if (!roundActive) return;
+    if (!windowOpen) return;
 
     const remaining = Math.max(
         0,
@@ -246,9 +247,15 @@ function selectionScene(){
 
 let lastTime = 0;
 function gameLoop(timestamp) {
+    console.log("Game loop started");
 
+    console.log(
+    "Image loaded:",
+    spritePlayer.image.complete,
+    spritePlayer.image.naturalWidth
+);
     updateRoundTimer();
-    
+
     const time = lastTime
         ? Math.min(timestamp - lastTime, 50)
         : 0;
