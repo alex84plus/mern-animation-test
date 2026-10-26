@@ -97,13 +97,13 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
         loop: true
     },
     attack: { 
-        row: 1,
+        row: 2,
         frames: 6,
         fps: 4,
         loop: false
     },
     victory: { 
-        row: 1,
+        row: 3,
         frames: 2,
         fps: 4,
         loop: true
