@@ -85,8 +85,8 @@ const player = { x: 100, y: 100, scale: 1};
 
 const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     idle: {
-        row: 2,
-        frames: 2,
+        row: 1,
+        frames: 4,
         fps: 4,
         loop: true
     },
@@ -98,11 +98,24 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     },
     attack: { 
         row: 1,
-        frames: 4,
+        frames: 6,
         fps: 4,
         loop: false
+    },
+    victory: { 
+        row: 1,
+        frames: 2,
+        fps: 4,
+        loop: true
     }
 });
+
+const background = new Image();
+background.src = "/sprites/forest-background.png";
+
+background.onload = () => {
+    console.log("Background loaded!");
+};
 
 spritePlayer.image.onload = () => {
     console.log("Sprite loaded");
@@ -264,6 +277,15 @@ function gameLoop(timestamp) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    if (background.complete && background.naturalWidth > 0) {
+    ctx.drawImage(
+        background,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+}
     // Update animation
     spritePlayer.update(time);
 
