@@ -9,11 +9,27 @@ const attackClickButton = document.getElementById("attackClickButton");
 const blockButton = document.getElementById("blockButton");
 const healButton = document.getElementById("healButton");
 
-const DMGMULT = 0.5;
+const roundTimerDisplay = document.getElementById("roundTimer");
+const roundText = document.getElementById("roundText");
 
-let totalClicks = 0;
+
+const DMGMULT = 0.5;
+const BLKMULT = 0.5;
+const HEALMULT = 0.5;
+
+const enemyDamage = 10;
+
+let roundClicks = {
+    attack: 0,
+    block: 0,
+    heal: 0
+};
+let roundNumber = 0;
+let combatOver = false;
 let windowOpen = false;
 let windowTime = 5000;
+let roundTimer = null;
+let roundEndTime = 0;
 
 //Player display
 class Sprite {
@@ -114,31 +130,102 @@ function dealDamage(totalClicks){
 
 // Interactivity window
 // Hide/reveal the clickable button to accumulate damage
-function showClicks(){
-    windowOpen = true;
-    attackButton.disabled = true;
-    attackClickButton.classList.remove('hidden');
-    setTimeout(() => {
-        windowOpen = false;
-        attackClickButton.classList.add('hidden');
-        spritePlayer.setAnimation("attack");
-        dealDamage(totalClicks);
-        attackButton.disabled = false;
-    }, windowTime);
+// disable buttons at first
+function setActionsEnabled(enabled) {
+    attackButton.disabled = !enabled;
+    blockButton.disabled = !enabled;
+    healButton.disabled = !enabled;
 }
-// Calculating clicks
-attackClickButton.addEventListener('click', () => {
-    if(windowOpen){
-        totalClicks++;
-    }
-});
+// start round
+function startRound() {
+    if (combatOver || windowOpen) return;
+
+    roundNumber++;
+    windowOpen = true;
+    roundClicks = {
+        attack: 0,
+        BLOCK: 0,
+        HEAL: 0
+    };
+    roundEndTime = performance.now() + roundTime;
+    roundText.textContent = `Round ${roundNumber}`;
+    roundTimerDisplay.textContent = "5.0";
+    setActionsEnabled(true);
+    roundTimer = setTimeout(() => {
+        endRound(); }, windowTime);
+}
+
+function registerAction(action) {
+    if(!windowOpen || combatOver) return;
+
+    roundClicks[action]++;
+    console.log(`${action}: ${roundClicks[action]}`);
+}
 // Clicking attack
 attackButton.addEventListener('click', () => {
-    if(windowOpen || spritePlayer.currentAnimation === "attack") return;
-    totalClicks = 0;
-    showClicks();
+    registerAction("attack");
+});
+blockButton.addEventListener('click', () => {
+    registerAction("block");
+});
+healButton.addEventListener('click', () => {
+    registerAction("heal");
 });
 
+function endRound(){
+    if (!windowOpen) return;
+
+    clearTimeout(roundTimer);
+    windowOpen = false;
+    setActionsEnabled(false);
+
+    const attackDamage = roundClicks.attack * ATTACK_MULT;
+    const blockedDamage = roundClicks.block * BLOCK_MULT;
+    const healingAmount = roundClicks.heal * HEAL_MULT;
+
+    const incomingDamage = enemyDamage - blockedDamage;
+    healthEnemy.value -= attackDamage;
+    healthPlayer.value -= incomingDamage + healingAmount;
+
+    console.log("Round results:", {
+        round: roundNumber,
+        clicks: { ...roundClicks },
+        attackDamage,
+        blockedDamage,
+        healingAmount,
+        incomingDamage,
+        playerHealth: healthPlayer.value,
+        enemyHealth: healthEnemy.value
+    });
+
+     if (roundClicks.attack > 0) {
+        spritePlayer.setAnimation("attack");
+    }
+    if(healthEnemy.vale <= 0 || healthPlayer.value <= 0){
+        combatOver = true;
+        console.log(healthEnemy.value <= 0 ? "Enemy defeated!" : "Player defeated!");
+        return;
+    }
+    const attackAnimation = spritePlayer.animations.attack;
+    const attackDuration = roundClicks.attack > 0 ? attackAnimation.frames / attackAnimation.fps * 1000 : 0;
+
+    setTimeout (() => {
+        startRound();
+    }, attackDuration + 500);
+}
+
+function updateRoundTimer() {
+    if (!roundActive) return;
+
+    const remaining = Math.max(
+        0,
+        (roundEndTime - performance.now()) / 1000
+    );
+
+    roundTimerDisplay.textContent = remaining.toFixed(1);
+}
+
+startRound();
 // Enemy functions
 
 // Selection screen
@@ -159,6 +246,9 @@ function selectionScene(){
 
 let lastTime = 0;
 function gameLoop(timestamp) {
+
+    updateRoundTimer();
+    
     const time = lastTime
         ? Math.min(timestamp - lastTime, 50)
         : 0;
