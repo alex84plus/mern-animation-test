@@ -72,11 +72,24 @@ class Sprite {
     }
 
     draw (ctx, x, y, scale = 1){
+        
         if(!this.image.complete || !this.image.naturalWidth) return;
         const animation = this.animations[this.currentAnimation];
 
         const srcX = this.frame * this.frameWidth;
         const srcY = animation.row * this.frameHeight;
+        if (
+            srcX + this.frameWidth > this.image.width ||
+            srcY + this.frameHeight > this.image.height
+        ) {
+            console.warn(
+                `Frame outside sprite sheet: ${this.currentAnimation}`,
+                this.frame,
+                srcX,
+                srcY
+            );
+            return;
+        }
         ctx.drawImage(this.image, srcX, srcY, this.frameWidth, this.frameHeight, x, y, this.frameWidth * scale, this.frameHeight * scale);
     }
 }
