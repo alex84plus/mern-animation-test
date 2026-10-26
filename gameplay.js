@@ -253,14 +253,14 @@ function endRound(){
         enemyHealth: healthEnemy.value
     });
 
-     if (roundClicks.attack > 0) {
-    console.log("Triggering attack animation!");
+    if (roundClicks.attack > 0) {
+    console.log("Attack animation triggered!");
+
     spritePlayer.setAnimation("attack");
 
-    console.log(
-        "Current animation:",
-        spritePlayer.currentAnimation
-    );
+    console.log("Current animation:", spritePlayer.currentAnimation);
+    console.log("Current frame:", spritePlayer.frame);
+}
 }
     if(healthEnemy.value <= 0 || healthPlayer.value <= 0){
         combatOver = true;
