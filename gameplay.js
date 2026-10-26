@@ -123,6 +123,34 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     }
 });
 
+function debugSpriteSheet() {
+    const image = spritePlayer.image;
+
+    console.log("SPRITE SHEET INFO:");
+    console.log("Width:", image.naturalWidth);
+    console.log("Height:", image.naturalHeight);
+
+    for (const [name, animation] of Object.entries(spritePlayer.animations)) {
+        const requiredWidth =
+            animation.frames * spritePlayer.frameWidth;
+
+        const requiredHeight =
+            (animation.row + 1) * spritePlayer.frameHeight;
+
+        console.log(`${name}:`, {
+            row: animation.row,
+            frames: animation.frames,
+            requiredWidth,
+            requiredHeight,
+            fits:
+                requiredWidth <= image.naturalWidth &&
+                requiredHeight <= image.naturalHeight
+        });
+    }
+}
+
+spritePlayer.image.addEventListener("load", debugSpriteSheet);
+
 const background = new Image();
 background.src = "/sprites/forest-background.png";
 
@@ -226,8 +254,14 @@ function endRound(){
     });
 
      if (roundClicks.attack > 0) {
-        spritePlayer.setAnimation("attack");
-    }
+    console.log("Triggering attack animation!");
+    spritePlayer.setAnimation("attack");
+
+    console.log(
+        "Current animation:",
+        spritePlayer.currentAnimation
+    );
+}
     if(healthEnemy.value <= 0 || healthPlayer.value <= 0){
         combatOver = true;
         console.log(healthEnemy.value <= 0 ? "Enemy defeated!" : "Player defeated!");
@@ -273,13 +307,7 @@ function selectionScene(){
 
 let lastTime = 0;
 function gameLoop(timestamp) {
-    console.log("Game loop started");
 
-    console.log(
-    "Image loaded:",
-    spritePlayer.image.complete,
-    spritePlayer.image.naturalWidth
-);
     updateRoundTimer();
 
     const time = lastTime
@@ -315,3 +343,8 @@ function gameLoop(timestamp) {
 
 // Start game
 requestAnimationFrame(gameLoop);
+
+setTimeout(() => {
+    console.log("TEST: Starting attack animation");
+    spritePlayer.setAnimation("attack");
+}, 2000);
