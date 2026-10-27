@@ -186,22 +186,6 @@ spritePlayer.image.onload = () => {
 spritePlayer.image.onerror = () => {
     console.error("failed to load sprite")
 };
-
-// Player functions
-// Reduces player health
-function takeDamage(damage){
-    healthPlayer.value -= damage;
-}
-//Reduces enemy health
-function damageEnemy(damage){
-    healthEnemy.value -= damage;
-}
-// Action of attack
-function dealDamage(totalClicks){
-    let totalDamage = totalClicks * DMGMULT;
-    damageEnemy(totalDamage);
-}
-
 // Interactivity window
 // Hide/reveal the clickable button to accumulate damage
 // disable buttons at first
@@ -275,31 +259,46 @@ function endRound(){
     let attackDuration = 0;
 
     if(roundClicks.attack > 0) {
-        spritePlayer.onAnimateComplete = () => {
-            finishRound();
-        };
         spritePlayer.setAnimation("attack");
         const animation = spritePlayer.animations.attack;
-        attackDuration = (animation.frames / animation.fps) * 100;
-    } else {
+        attackDuration = (animation.frames / animation.fps) * 1000;
+    } 
+    setTimeout(() => {
         finishRound();
-    }
-    function finishRound() {
-    if (healthPlayer.value <=0) {
+    }, attackDuration);
+
+}
+
+function finishRound() {
+
+    // Player defeated
+    if (Number(healthPlayer.value) <= 0) {
         combatOver = true;
+
+        console.log("Player defeated!");
         return;
     }
-    if (healthEnemy.value <=0) {
+
+    // Enemy defeated
+    if (Number(healthEnemy.value) <= 0) {
         combatOver = true;
+
+        console.log(`${currentEnemy.name} defeated!`);
+
         spritePlayer.setAnimation("victory");
-        setTimeout (() => {
-        transition();
-    }, 2000);
-    return;
-    }
-    startRound();
+
+        // Wait before moving to next stage
+        setTimeout(() => {
+            transition();
+        }, 2000);
+
+        return;
     }
 
+    // Neither defeated: continue combat
+    console.log("Both characters alive. Starting next round.");
+
+    startRound();
 }
 
 
