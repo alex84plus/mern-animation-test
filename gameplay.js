@@ -17,8 +17,28 @@ const DMGMULT = 0.5;
 const BLKMULT = 0.5;
 const HEALMULT = 0.5;
 
-const enemyDamage = 10;
-
+const enemyDamage = [
+    {
+        name: "Ghoul",
+        health: 100,
+        damage: 10,
+        sprite:""
+    },
+    {
+        name: "Skeleton",
+        health: 100,
+        damage: 10,
+        sprite:""
+    },
+    {
+        name: "Boss",
+        health: 100,
+        damage: 10,
+        sprite:""
+    }
+];
+let currentStage = 0;
+let currentEnemy = null;
 let roundClicks = {
     attack: 0,
     block: 0,
@@ -238,7 +258,7 @@ function endRound(){
     const blockedDamage = roundClicks.block * BLKMULT;
     const healingAmount = roundClicks.heal * HEALMULT;
 
-    const incomingDamage = Math.max(0, enemyDamage - blockedDamage);
+    const incomingDamage = Math.max(0, currentEnemy.damage - blockedDamage);
     healthEnemy.value = Math.max(0, Number(healthEnemy.value) - attackDamage);
     healthPlayer.value = Math.min(Number(healthPlayer.max), Math.max(0, Number(healthPlayer.value) - incomingDamage + healingAmount));
 
@@ -254,25 +274,35 @@ function endRound(){
     });
 
      if (roundClicks.attack > 0) {
-    console.log("Attack animation triggered!");
 
     spritePlayer.setAnimation("attack");
 
-    console.log("Current animation:", spritePlayer.currentAnimation);
-    console.log("Current frame:", spritePlayer.frame);
-}
-    if(healthEnemy.value <= 0 || healthPlayer.value <= 0){
+    }
+    function finishRound() {
+    if (healthPlayer.value <=0) {
         combatOver = true;
-        console.log(healthEnemy.value <= 0 ? "Enemy defeated!" : "Player defeated!");
         return;
     }
-    const attackAnimation = spritePlayer.animations.attack;
-    const attackDuration = roundClicks.attack > 0 ? attackAnimation.frames / attackAnimation.fps * 1000 : 0;
-
-    setTimeout (() => {
-        startRound();
-    }, attackDuration + 500);
+    if (healthEnemy.value <=0) {
+        combatOver = true;
+        spritePlayer.setAnimation("victory");
+        setTimeout (() => {
+        transition();
+    }, 2000);
+    return;
+    }
+    startRound();
+    }
+    if(roundClicks.attack > 0) {
+        spritePlayer.onAnimateComplete = () => {
+            finishRound();
+        };
+        spritePlayer.setAnimation("attack");
+    } else {
+        finishRound();
+    }
 }
+
 
 function updateRoundTimer() {
     if (!windowOpen) return;
@@ -290,8 +320,31 @@ startRound();
 
 // Selection screen
 
+function loadEnemy(){
+    currentEnemy = enemies[currentStage];
+    healthEnemy.max = currentEnemy.health;
+    healthEnemy.value = currentEnemy.health;
+}
+
 // Moves the player to the next stage
 function transition(){
+    currentStage++;
+
+    if(currentStage >= enemies.length) {
+        spritePlayer.setAnimation("victory");
+        combatOver = true;
+        return;
+    }
+
+    loadEnemy();
+
+    roundNumber = 0;
+    combatOver = false;
+    windowOpen = false;
+
+    spritePlayer.setAnimation("idle");
+
+    startRound();
 
 }
 
@@ -341,9 +394,7 @@ function gameLoop(timestamp) {
 }
 
 // Start game
-requestAnimationFrame(gameLoop);
+loadEnemy();
+startRound();
 
-setTimeout(() => {
-    console.log("TEST: Starting attack animation");
-    spritePlayer.setAnimation("attack");
-}, 2000);
+requestAnimationFrame(gameLoop);
