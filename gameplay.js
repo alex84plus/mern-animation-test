@@ -13,11 +13,11 @@ const roundTimerDisplay = document.getElementById("roundTimer");
 const roundText = document.getElementById("roundText");
 
 
-const DMGMULT = 0.5;
+const DMGMULT = 2;
 const BLKMULT = 0.5;
 const HEALMULT = 0.5;
 
-const enemyDamage = [
+const enemies = [
     {
         name: "Ghoul",
         health: 100,
