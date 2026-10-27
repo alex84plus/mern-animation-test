@@ -72,11 +72,24 @@ class Sprite {
     }
 
     draw (ctx, x, y, scale = 1){
+        
         if(!this.image.complete || !this.image.naturalWidth) return;
         const animation = this.animations[this.currentAnimation];
 
         const srcX = this.frame * this.frameWidth;
         const srcY = animation.row * this.frameHeight;
+        if (
+            srcX + this.frameWidth > this.image.width ||
+            srcY + this.frameHeight > this.image.height
+        ) {
+            console.warn(
+                `Frame outside sprite sheet: ${this.currentAnimation}`,
+                this.frame,
+                srcX,
+                srcY
+            );
+            return;
+        }
         ctx.drawImage(this.image, srcX, srcY, this.frameWidth, this.frameHeight, x, y, this.frameWidth * scale, this.frameHeight * scale);
     }
 }
@@ -97,18 +110,46 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
         loop: true
     },
     attack: { 
-        row: 1,
+        row: 2,
         frames: 6,
         fps: 4,
         loop: false
     },
     victory: { 
-        row: 1,
+        row: 3,
         frames: 2,
         fps: 4,
         loop: true
     }
 });
+
+function debugSpriteSheet() {
+    const image = spritePlayer.image;
+
+    console.log("SPRITE SHEET INFO:");
+    console.log("Width:", image.naturalWidth);
+    console.log("Height:", image.naturalHeight);
+
+    for (const [name, animation] of Object.entries(spritePlayer.animations)) {
+        const requiredWidth =
+            animation.frames * spritePlayer.frameWidth;
+
+        const requiredHeight =
+            (animation.row + 1) * spritePlayer.frameHeight;
+
+        console.log(`${name}:`, {
+            row: animation.row,
+            frames: animation.frames,
+            requiredWidth,
+            requiredHeight,
+            fits:
+                requiredWidth <= image.naturalWidth &&
+                requiredHeight <= image.naturalHeight
+        });
+    }
+}
+
+spritePlayer.image.addEventListener("load", debugSpriteSheet);
 
 const background = new Image();
 background.src = "/sprites/forest-background.png";
@@ -213,7 +254,12 @@ function endRound(){
     });
 
      if (roundClicks.attack > 0) {
-        spritePlayer.setAnimation("attack");
+    console.log("Attack animation triggered!");
+
+    spritePlayer.setAnimation("attack");
+
+    console.log("Current animation:", spritePlayer.currentAnimation);
+    console.log("Current frame:", spritePlayer.frame);
     }
     if(healthEnemy.value <= 0 || healthPlayer.value <= 0){
         combatOver = true;
@@ -260,13 +306,7 @@ function selectionScene(){
 
 let lastTime = 0;
 function gameLoop(timestamp) {
-    console.log("Game loop started");
 
-    console.log(
-    "Image loaded:",
-    spritePlayer.image.complete,
-    spritePlayer.image.naturalWidth
-);
     updateRoundTimer();
 
     const time = lastTime
@@ -302,3 +342,8 @@ function gameLoop(timestamp) {
 
 // Start game
 requestAnimationFrame(gameLoop);
+
+setTimeout(() => {
+    console.log("TEST: Starting attack animation");
+    spritePlayer.setAnimation("attack");
+}, 2000);
