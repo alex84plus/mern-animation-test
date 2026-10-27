@@ -272,11 +272,17 @@ function endRound(){
         playerHealth: healthPlayer.value,
         enemyHealth: healthEnemy.value
     });
+    let attackDuration = 0;
 
-     if (roundClicks.attack > 0) {
-
-    spritePlayer.setAnimation("attack");
-
+    if(roundClicks.attack > 0) {
+        spritePlayer.onAnimateComplete = () => {
+            finishRound();
+        };
+        spritePlayer.setAnimation("attack");
+        const animation = spritePlayer.animations.attack;
+        attackDuration = (animation.frames / animation.fps) * 100;
+    } else {
+        finishRound();
     }
     function finishRound() {
     if (healthPlayer.value <=0) {
@@ -293,14 +299,7 @@ function endRound(){
     }
     startRound();
     }
-    if(roundClicks.attack > 0) {
-        spritePlayer.onAnimateComplete = () => {
-            finishRound();
-        };
-        spritePlayer.setAnimation("attack");
-    } else {
-        finishRound();
-    }
+
 }
 
 
@@ -315,7 +314,6 @@ function updateRoundTimer() {
     roundTimerDisplay.textContent = remaining.toFixed(1);
 }
 
-startRound();
 // Enemy functions
 
 // Selection screen
