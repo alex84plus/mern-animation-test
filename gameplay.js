@@ -4,12 +4,10 @@ const ctx = canvas.getContext("2d");
 const healthPlayer = document.getElementById("healthPlayer");
 const healthEnemy = document.getElementById("healthEnemy");
 
-const startButton = document.getElementById("startButton");
 const attackButton = document.getElementById("attackButton");
 const attackClickButton = document.getElementById("attackClickButton");
 const blockButton = document.getElementById("blockButton");
 const healButton = document.getElementById("healButton");
-
 
 const roundTimerDisplay = document.getElementById("roundTimer");
 const roundText = document.getElementById("roundText");
@@ -390,15 +388,6 @@ function gameLoop(timestamp) {
     );
 
     requestAnimationFrame(gameLoop);
-}
-
-startButton.addEventListener('click', () => {
-    window.location.href = "page.html";
-    
-})
-
-function doStart(){
-
 }
 
 // Start game
