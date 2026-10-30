@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0">
+    
+        <title>Forest Crawler</title>
+    
+        <link rel="stylesheet" href="./style.css">
+        <script src="./gameplay.js" defer></script>
+    </head>
+    <body>
+        <div class="start">
+            <button id="startButton" type="button">START</button>
+        </div>
+    </body>
+</html>
