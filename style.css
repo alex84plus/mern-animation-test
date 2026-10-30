@@ -5,6 +5,15 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.start {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+
+}
+
 .gameContainer {
     display: flex;
     flex-direction: column;
