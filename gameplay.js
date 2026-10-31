@@ -286,7 +286,9 @@ function endRound(){
         const animation = spritePlayer.animations.attack;
         attackDuration = (animation.frames / animation.fps) * 1000;
         spriteGoblin.setAnimation("hit");
-    } 
+    } else {
+        spriteGoblin.setAnimation("attack");
+    }
     setTimeout(() => {
         finishRound();
     }, attackDuration);
