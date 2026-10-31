@@ -143,6 +143,8 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     }
 });
 
+const enemy = { x: 300, y: 200, scale: 1};
+
 const spriteGoblin = new Sprite( "/sprites/goblinsheet.png", 500, 500, {
     idle: {
         row: 0,
@@ -389,6 +391,13 @@ function gameLoop(timestamp) {
         player.x,
         player.y,
         player.scale
+    );
+
+    spriteGoblin.draw(
+        ctx,
+        enemy.x,
+        enemy.y,
+        enemy.scale
     );
 
     requestAnimationFrame(gameLoop);
