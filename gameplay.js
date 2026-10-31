@@ -143,7 +143,7 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     }
 });
 
-const enemy = { x: 300, y: 200, scale: 1};
+const enemy = { x: 200, y: 50, scale: 0.8};
 
 const spriteGoblin = new Sprite( "/sprites/goblinsheet.png", 500, 500, {
     idle: {
