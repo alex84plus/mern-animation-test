@@ -143,29 +143,33 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     }
 });
 
-const enemy = { x: 300, y: 200, scale: 1};
+function debugSpriteSheet() {
+    const image = spritePlayer.image;
 
-const spriteGoblin = new Sprite( "/sprites/goblinsheet.png", 500, 500, {
-    idle: {
-        row: 0,
-        frames: 3,
-        fps: 4,
-        loop: true
-    },
-    attack: { 
-        row: 2,
-        frames: 4,
-        fps: 4,
-        loop: false
-    },
-    hit: { 
-        row: 1,
-        frames: 4,
-        fps: 4,
-        loop: false
+    console.log("SPRITE SHEET INFO:");
+    console.log("Width:", image.naturalWidth);
+    console.log("Height:", image.naturalHeight);
+
+    for (const [name, animation] of Object.entries(spritePlayer.animations)) {
+        const requiredWidth =
+            animation.frames * spritePlayer.frameWidth;
+
+        const requiredHeight =
+            (animation.row + 1) * spritePlayer.frameHeight;
+
+        console.log(`${name}:`, {
+            row: animation.row,
+            frames: animation.frames,
+            requiredWidth,
+            requiredHeight,
+            fits:
+                requiredWidth <= image.naturalWidth &&
+                requiredHeight <= image.naturalHeight
+        });
     }
-});
+}
 
+spritePlayer.image.addEventListener("load", debugSpriteSheet);
 
 const background = new Image();
 background.src = "/sprites/forest-background.png";
@@ -180,15 +184,6 @@ spritePlayer.image.onload = () => {
 };
 
 spritePlayer.image.onerror = () => {
-    console.error("failed to load sprite")
-};
-
-spriteGoblin.image.onload = () => {
-    console.log("Globin loaded");
-    console.log(spriteGoblin.image.width, spriteGoblin.image.height);
-};
-
-spriteGoblin.image.onerror = () => {
     console.error("failed to load sprite")
 };
 // Interactivity window
@@ -267,7 +262,6 @@ function endRound(){
         spritePlayer.setAnimation("attack");
         const animation = spritePlayer.animations.attack;
         attackDuration = (animation.frames / animation.fps) * 1000;
-        await spriteGoblin.setAnimation("hit");
     } 
     setTimeout(() => {
         finishRound();
@@ -391,13 +385,6 @@ function gameLoop(timestamp) {
         player.x,
         player.y,
         player.scale
-    );
-
-    spriteGoblin.draw(
-        ctx,
-        enemy.x,
-        enemy.y,
-        enemy.scale
     );
 
     requestAnimationFrame(gameLoop);
