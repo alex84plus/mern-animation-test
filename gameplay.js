@@ -145,7 +145,7 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
 
 const enemy = { x: 300, y: 200, scale: 1};
 
-const spriteGoblin = new Sprite( "/sprites/spritesheet1.png", 500, 500, {
+const spriteGoblin = new Sprite( "/sprites/goblinsheet.png", 500, 500, {
     idle: {
         row: 0,
         frames: 3,
