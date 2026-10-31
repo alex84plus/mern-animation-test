@@ -143,6 +143,29 @@ const spritePlayer = new Sprite( "/sprites/spritesheet1.png", 250, 250, {
     }
 });
 
+const enemy = { x: 300, y: 200, scale: 1};
+
+const spriteGoblin = new Sprite( "/sprites/spritesheet1.png", 500, 500, {
+    idle: {
+        row: 0,
+        frames: 3,
+        fps: 4,
+        loop: true
+    },
+    hit: {
+        row: 1,
+        frames: 4,
+        fps: 4,
+        loop: false
+    },
+    attack: { 
+        row: 2,
+        frames: 4,
+        fps: 4,
+        loop: false
+    },
+});
+
 function debugSpriteSheet() {
     const image = spritePlayer.image;
 
@@ -262,6 +285,7 @@ function endRound(){
         spritePlayer.setAnimation("attack");
         const animation = spritePlayer.animations.attack;
         attackDuration = (animation.frames / animation.fps) * 1000;
+        spriteGoblin.setAnimation("hit");
     } 
     setTimeout(() => {
         finishRound();
@@ -385,6 +409,16 @@ function gameLoop(timestamp) {
         player.x,
         player.y,
         player.scale
+    );
+
+    spriteGoblin.update(time);
+
+    // Draw character
+    spriteGoblin.draw(
+        ctx,
+        enemy.x,
+        enemy.y,
+        enemy.scale
     );
 
     requestAnimationFrame(gameLoop);
