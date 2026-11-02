@@ -464,6 +464,12 @@ async function renderSelectionScreen(){
         updateSelectionStatus();
 };
 
+async function createPlayerState(id, username){
+    return {
+        id, username, health: 100, damageMult: 1, blockMult: 1, healMult: 1, selectedItem: null
+    };
+};
+
 let players = [
     createPlayerState("player1", "Player 1"),
     createPlayerState("player2", "Player 2")
