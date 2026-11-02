@@ -457,7 +457,7 @@ async function renderSelectionScreen(){
         card.innerHTML = `
             <h3>${item.name}</h3>
             <p>${item.desc}</p>
-            <button type="button">Select<button>
+            <button type="button">Select</button>
         `;
 
         const button = card.querySelector("button");
@@ -475,7 +475,7 @@ async function renderSelectionScreen(){
         updateSelectionStatus();
 };
 
-async function createPlayerState(id, username){
+function createPlayerState(id, username){
     return {
         id, username, health: 100, damageMult: 1, blockMult: 1, healMult: 1, selectedItem: null
     };
@@ -496,7 +496,7 @@ async function selectItem(itemID) {
 
     player.selectedItem = item.id;
     switch (item.type) {
-        case "damage":
+        case "attack":
             player.damageMult *= item.mult;
             break;
         case "block":
