@@ -448,6 +448,8 @@ async function renderSelectionScreen(){
 
     itemOptions.innerHTML = "";
 
+    const player = players.find(p => p.id === localPlayerId);
+
     selectableItems.forEach(item => {
         const card = document.createElement("div");
 
@@ -455,10 +457,18 @@ async function renderSelectionScreen(){
         card.innerHTML = `
             <h3>${item.name}</h3>
             <p>${item.desc}</p>
-            <button>Select<button>
+            <button type="button">Select<button>
         `;
 
-        card.querySelector("button").addEventListener( "click", () => selectItem(item.id));
+        const button = card.querySelector("button");
+
+        if (!player || player.selectedItem !== null) {
+            button.disabled = true;
+        } else {
+            button.addEventListener("click", () => {
+                selectItem(item.id);
+            });
+        }
 
         itemOptions.appendChild(card);
     });
@@ -472,8 +482,7 @@ async function createPlayerState(id, username){
 };
 
 let players = [
-    createPlayerState("player1", "Player 1"),
-    createPlayerState("player2", "Player 2")
+    createPlayerState("player1", "Player 1")
 ];
 let localPlayerId = "player1"
 
@@ -497,13 +506,14 @@ async function selectItem(itemID) {
             player.healMult *= item.mult;
             break;
     }
+    renderSelectionScreen();
     updateSelectionStatus();
     checkAllSelections();
 };
 
 async function updateSelectionStatus() {
     const selectedCount = players.filter ( p => p.selectedItem !== null).length;
-    selectionStatus.textContent = '${selectedCount}/${players.length} Players have selected items.';
+    selectionStatus.textContent = `${selectedCount}/${players.length} Players have selected items.`;
 }
 async function checkAllSelections() {
     const everyoneSelected = players.every(p => p.selectedItem !== null);
