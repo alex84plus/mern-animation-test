@@ -372,7 +372,7 @@ function finishRound() {
 
         // Wait before moving to next stage
         setTimeout(() => {
-            transition();
+            beginSelection();
         }, 2000);
 
         return;
@@ -414,7 +414,7 @@ function transition(){
     roundNumber = 0;
     windowOpen = false;
 
-    spritePlayer.setAnimation("idle");
+    spritePlayer.setAnimation("walk");
     
     if(currentStage < enemies.length) {
         loadEnemy();
@@ -432,13 +432,14 @@ function transition(){
 }
 
 let selectableItems = [];
-async function selectionScene(){
-    gamephase = "selection";
+async function beginSelection(){
+    gamePhase = "selection";
     windowOpen = false;
+    if(gamePhase === "selection") spritePlayer.setAnimation("walk");
     clearTimeout(roundTimer);
     setActionsEnabled(false);
-    selectableItems = generateitems();
-    selectionScreen.style.display = "block";
+    selectableItems = generateItems();
+    n.style.display = "block";
 
     renderSelectionScreen();
 }
