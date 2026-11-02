@@ -19,10 +19,10 @@ const HEALMULT = 0.5;
 
 const enemies = [
     {
-        name: "Ghoul",
+        name: "Goblin",
         health: 100,
         damage: 10,
-        sprite:""
+        sprite: spriteGoblin
     },
     {
         name: "Skeleton",
@@ -30,12 +30,6 @@ const enemies = [
         damage: 10,
         sprite:""
     },
-    {
-        name: "Boss",
-        health: 100,
-        damage: 10,
-        sprite:""
-    }
 ];
 let currentStage = 0;
 let currentEnemy = null;
@@ -413,10 +407,12 @@ function gameLoop(timestamp) {
         player.scale
     );
 
-    spriteGoblin.update(time);
+    currentEnemy = enemies[currentStage];
+
+    currentEnemy.sprite.update(time);
 
     // Draw character
-    spriteGoblin.draw(
+    currentEnemy.sprite.draw(
         ctx,
         enemy.x,
         enemy.y,
