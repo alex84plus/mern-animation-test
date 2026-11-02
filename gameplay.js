@@ -449,7 +449,7 @@ async function renderSelectionScreen(){
     itemOptions.innerHTML = "";
 
     selectableItems.forEach(item => {
-        const card = document.createElemt("div");
+        const card = document.createElement("div");
 
         card.classList.add("item-card");
         card.innerHTML = `
