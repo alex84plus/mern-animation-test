@@ -439,7 +439,7 @@ async function beginSelection(){
     clearTimeout(roundTimer);
     setActionsEnabled(false);
     selectableItems = generateItems();
-    n.style.display = "block";
+    selectionScreen.style.display = "block";
 
     renderSelectionScreen();
 }
