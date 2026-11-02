@@ -8,9 +8,20 @@
         <title>Forest Crawler</title>
     
         <link rel="stylesheet" href="./style.css">
-        <script src="./gameplay.js" defer></script>
+        <script src="./lobby.js" defer></script>
+        <script src="./login.js" defer></script>
     </head>
     <body>
+        <div class="navBar">
+            <button id="logoutButton" type="button">Logout</button>
+            <div class="profile">
+                <p>Username: <span id="username"></span></p>
+                <p>Email: <span id="email"></span></p>
+            </div>
+            <div class="initializeGame">
+                <button id="openGame" type="button">Open Session</button>
+            </div>
+        </div>
         <div class="start">
             <button id="startButton" type="button">START</button>
         </div>
