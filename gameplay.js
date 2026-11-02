@@ -161,7 +161,7 @@ const enemies = [
         name: "Skeleton",
         health: 100,
         damage: 10,
-        sprite: spriteSkeleton
+        sprite: spriteGoblin
     },
 ];
 
