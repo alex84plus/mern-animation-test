@@ -170,44 +170,44 @@ let currentEnemy = null;
 
 const items = [
     {
-        id = "sharpening",
-        name = "Sharpened Sword"
-        description = "Increase damage by 25%",
+        id : "sharpening",
+        name : "Sharpened Sword"
+        description : "Increase damage by 25%",
         type: "attack",
         mult: 1.25
     },
     {
-        id = "heating",
-        name = "Heated Sword"
-        description = "Increase damage by 30%",
+        id : "heating",
+        name : "Heated Sword"
+        description : "Increase damage by 30%",
         type: "attack",
         mult: 1.30
     },
     {
-        id = "iron",
-        name = "Iron Shield"
-        description = "Increase blockage by 25%",
+        id : "iron",
+        name : "Iron Shield"
+        description : "Increase blockage by 25%",
         type: "block",
         mult: 1.25
     },
     {
-        id = "wood",
-        name = "Wooden Shield"
-        description = "Increase blockage by 15%",
+        id : "wood",
+        name : "Wooden Shield"
+        description : "Increase blockage by 15%",
         type: "block",
         mult: 1.15
     },
     {
-        id = "potion",
-        name = "Elixir"
-        description = "Increase healing by 25%",
+        id : "potion",
+        name : "Elixir"
+        description : "Increase healing by 25%",
         type: "heal",
         mult: 1.25
     },
     {
-        id = "bandage",
-        name = "Guaze"
-        description = "Increase healing by 15%",
+        id : "bandage",
+        name : "Guaze"
+        description : "Increase healing by 15%",
         type: "heal",
         mult: 1.15
     }
