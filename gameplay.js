@@ -172,42 +172,42 @@ const items = [
     {
         id: "sharpening",
         name: "Sharpened Sword"
-        description: "Increase damage by 25%",
+        desc: "Increase damage by 25%",
         type: "attack",
         mult: 1.25
     },
     {
         id: "heating",
         name: "Heated Sword"
-        description : "Increase damage by 30%",
+        desc: "Increase damage by 30%",
         type: "attack",
         mult: 1.30
     },
     {
         id: "iron",
         name: "Iron Shield"
-        description: "Increase blockage by 25%",
+        desc: "Increase blockage by 25%",
         type: "block",
         mult: 1.25
     },
     {
         id: "wood",
         name: "Wooden Shield"
-        description: "Increase blockage by 15%",
+        desc: "Increase blockage by 15%",
         type: "block",
         mult: 1.15
     },
     {
         id: "potion",
         name: "Elixir"
-        description: "Increase healing by 25%",
+        desc: "Increase healing by 25%",
         type: "heal",
         mult: 1.25
     },
     {
-        id : "bandage",
-        name : "Guaze"
-        description : "Increase healing by 15%",
+        id: "bandage",
+        name: "Guaze"
+        desc: "Increase healing by 15%",
         type: "heal",
         mult: 1.15
     }
@@ -453,7 +453,7 @@ async function renderSelectionScreen(){
         card.classList.add("item-card");
         card.innerHTML = '
             <h3>${item.name}</h3>
-            <p>${item.description}</p>
+            <p>${item.desc}</p>
             <button>Select<button>
         ';
 
