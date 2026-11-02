@@ -491,7 +491,7 @@ async function selectItem(itemID) {
 
     const player = players.find( p => p.id === localPlayerId );
     if(!player || player.selectedItem) return;
-    const item = itemOptions.find( p => p.id === itemID );
+    const item = selectableItems.find( p => p.id === itemID );
     if(!item) return;
 
     player.selectedItem = item.id;
