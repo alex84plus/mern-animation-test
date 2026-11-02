@@ -12,32 +12,22 @@ const healButton = document.getElementById("healButton");
 const roundTimerDisplay = document.getElementById("roundTimer");
 const roundText = document.getElementById("roundText");
 
+const selectionScreen = document.getElementById("selectionScreen");
+const itemOptions = document.getElementById("itemOptions");
+const selectionStatus = document.getElementById("selectionStatus");
+
 
 const DMGMULT = 2;
 const BLKMULT = 0.5;
 const HEALMULT = 0.5;
 
-const enemies = [
-    {
-        name: "Goblin",
-        health: 100,
-        damage: 10,
-        sprite: spriteGoblin
-    },
-    {
-        name: "Skeleton",
-        health: 100,
-        damage: 10,
-        sprite:""
-    },
-];
-let currentStage = 0;
-let currentEnemy = null;
 let roundClicks = {
     attack: 0,
     block: 0,
     heal: 0
 };
+
+let gamePhase = "combat";
 let roundNumber = 0;
 let combatOver = false;
 let windowOpen = false;
@@ -160,6 +150,79 @@ const spriteGoblin = new Sprite( "/sprites/goblinsheet.png", 500, 500, {
     },
 });
 
+const enemies = [
+    {
+        name: "Goblin",
+        health: 100,
+        damage: 10,
+        sprite: spriteGoblin
+    },
+    {
+        name: "Skeleton",
+        health: 100,
+        damage: 10,
+        sprite: spriteSkeleton
+    },
+];
+
+let currentStage = 0;
+let currentEnemy = null;
+
+const items = [
+    {
+        id = "sharpening",
+        name = "Sharpened Sword"
+        description = "Increase damage by 25%",
+        type: "attack",
+        mult: 1.25
+    },
+    {
+        id = "heating",
+        name = "Heated Sword"
+        description = "Increase damage by 30%",
+        type: "attack",
+        mult: 1.30
+    },
+    {
+        id = "iron",
+        name = "Iron Shield"
+        description = "Increase blockage by 25%",
+        type: "block",
+        mult: 1.25
+    },
+    {
+        id = "wood",
+        name = "Wooden Shield"
+        description = "Increase blockage by 15%",
+        type: "block",
+        mult: 1.15
+    },
+    {
+        id = "potion",
+        name = "Elixir"
+        description = "Increase healing by 25%",
+        type: "heal",
+        mult: 1.25
+    },
+    {
+        id = "bandage",
+        name = "Guaze"
+        description = "Increase healing by 15%",
+        type: "heal",
+        mult: 1.15
+    }
+];
+
+function generateItems() {
+        const shuffled = [...items];
+        for(let i = shuffled.length - 1; i > 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, 3);
+};
+
 function debugSpriteSheet() {
     const image = spritePlayer.image;
 
@@ -279,9 +342,9 @@ function endRound(){
         spritePlayer.setAnimation("attack");
         const animation = spritePlayer.animations.attack;
         attackDuration = (animation.frames / animation.fps) * 1000;
-        spriteGoblin.setAnimation("hit");
+        currentEnemy.sprite.setAnimation("hit");
     } else {
-        spriteGoblin.setAnimation("attack");
+        currentEnemy.sprite.setAnimation("attack");
     }
     setTimeout(() => {
         finishRound();
@@ -301,9 +364,9 @@ function finishRound() {
 
     // Enemy defeated
     if (Number(healthEnemy.value) <= 0) {
-        combatOver = true;
 
         console.log(`${currentEnemy.name} defeated!`);
+        combatOver = true;
 
         spritePlayer.setAnimation("victory");
 
@@ -341,41 +404,120 @@ function loadEnemy(){
     currentEnemy = enemies[currentStage];
     healthEnemy.max = currentEnemy.health;
     healthEnemy.value = currentEnemy.health;
+    currentEnemy.sprite.setAnimation("idle");
 }
 
 // Moves the player to the next stage
 function transition(){
     currentStage++;
 
-    if(currentStage >= enemies.length) {
-        spritePlayer.setAnimation("victory");
-        combatOver = true;
-        return;
-    }
-
-    loadEnemy();
-
     roundNumber = 0;
-    combatOver = false;
     windowOpen = false;
 
     spritePlayer.setAnimation("idle");
+    
+    if(currentStage < enemies.length) {
+        loadEnemy();
 
-    startRound();
+        gamePhase = "combat";
+        combatOver = false;
+
+
+        startRound();
+        return;
+    }
+    gamePhase = "pvp"
+    console.log("Entering PVP phase!");
 
 }
 
-function combatScene(){
+let selectableItems = [];
+async function selectionScene(){
+    gamephase = "selection";
+    windowOpen = false;
+    clearTimeout(roundTimer);
+    setActionsEnabled(false);
+    selectableItems = generateitems();
+    selectionScreen.style.display = "block";
 
+    renderSelectionScreen();
 }
-function selectionScene(){
 
+async function renderSelectionScreen(){
+
+    itemOptions.innerHTML = "";
+
+    selectableItems.forEach(item => {
+        const card = document.createElemt("div");
+
+        card.classList.add("item-card");
+        card.innerHTML = '
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <button>Select<button>
+        ';
+
+        card.querySelector("button").addEventListener( "click", () => selectItem(item.id));
+
+        itemOptions.appendChild(card);
+    });
+        updateSelectionStatus();
+};
+
+let players = [
+    createPlayerState("player1", "Player 1"),
+    createPlayerState("player2", "Player 2")
+];
+let localPlayerId = "player1"
+
+async function selectItem(itemID) {
+    if(gamePhase !== "selection") return;
+
+    const player = players.find( p => p.id === localPlayerId );
+    if(!player || player.selectedItem) return;
+    const item = itemOptions.find( p => p.id === itemID );
+    if(!item) return;
+
+    player.selectedItem = item.id;
+    switch (item.type) {
+        case "damage":
+            player.damageMult *= item.mult;
+            break;
+        case "block":
+            player.blockMult *= item.mult;
+            break;
+        case "heal":
+            player.healMult *= item.mult;
+            break;
+    }
+    updateSelectionStatus();
+    checkAllSelections();
+};
+
+async function updateSelectionStatus() {
+    const selectedCount = players.filter ( p => p.selectedItem !== null).length;
+    selectionStatus.textContent = '${selectedCount}/${players.length} Players have selected items.';
+}
+async function checkAllSelections() {
+    const everyoneSelected = players.every(p => p.selectedItem !== null);
+    if(!everyoneSelected) return;
+    finishSelection();
+}
+async function finishSelection() {
+
+    if(gamePhase !== "selection") return;
+
+    gamePhase = "transition";
+    selectionScreen.style.display = "none";
+    players.forEach(player => { player.selectedItem = null });
+
+    transition();
 }
 
 // Gameplay loop
 
 let lastTime = 0;
-function gameLoop(timestamp) {
+async function gameLoop(timestamp) {
 
     updateRoundTimer();
 
@@ -407,17 +549,16 @@ function gameLoop(timestamp) {
         player.scale
     );
 
-    currentEnemy = enemies[currentStage];
+   if(currentEnemy && currentEnemy.sprite){
+       currentEnemy.sprite.update(time);
 
-    currentEnemy.sprite.update(time);
-
-    // Draw character
-    currentEnemy.sprite.draw(
+       currentEnemy.sprite.draw(
         ctx,
         enemy.x,
         enemy.y,
         enemy.scale
     );
+   }
 
     requestAnimationFrame(gameLoop);
 }
