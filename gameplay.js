@@ -451,11 +451,11 @@ async function renderSelectionScreen(){
         const card = document.createElemt("div");
 
         card.classList.add("item-card");
-        card.innerHTML = '
+        card.innerHTML = `
             <h3>${item.name}</h3>
             <p>${item.desc}</p>
             <button>Select<button>
-        ';
+        `;
 
         card.querySelector("button").addEventListener( "click", () => selectItem(item.id));
 
