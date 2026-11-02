@@ -512,12 +512,17 @@ async function selectItem(itemID) {
 };
 
 async function updateSelectionStatus() {
-    const selectedCount = players.filter ( p => p.selectedItem !== null).length;
+    const selectedCount = players.filter( p => p.selectedItem !== null).length;
     selectionStatus.textContent = `${selectedCount}/${players.length} Players have selected items.`;
 }
 async function checkAllSelections() {
     const everyoneSelected = players.every(p => p.selectedItem !== null);
+    console.log("Selection status:", players.map(p => ({
+        player: p.username,
+        selectedItem: p.selectedItem
+    })));
     if(!everyoneSelected) return;
+    console.log("Everyone selected! Moving to next stage.");
     finishSelection();
 }
 async function finishSelection() {
